@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tata Excel</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/icon type">
+
+    <style>
+       
+        @media (max-width: 768px) {
+            h1 {
+                padding:45px;
+                font-size: 1.5rem;
+                text-align: center;
+                
+                
+            }
+            input#vehicleNumber {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            button {
+                width: 100%;
+              margin-bottom: 0.5rem;
+            }
+        }
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0%;
+            width: 100%;
+            height: 50px;
+            background: rgb(39, 42, 189);
+            color: white;
+            font-size: 20px;
+            
+        }
+        #loader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(39, 42, 189);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #main-content {
+            display: none;
+        }
+        
+    </style>
+</head>
+<body style = "background-color : #C6E7FF">
+
+    <div id="loader">    
+        <img src="tata_logo.svg" alt="Loading..." >
+        
+       
+</div>
+    
+    <div id="main-content" class="container">
+        
+        <h1>Enter Vehicle Number</h1>
+        <input type="text" id="vehicleNumber" placeholder="Enter vehicle number" style="font-size:20pt">
+        <br><br>
+        <button onclick="handOver()">Hand Over</button>
+        <button onclick="fitted()">Fitted</button>
+    
+        <div id="cameraOptions"></div>
+    
+        <div class ="footer">
+            <p><center>Made with ❤️</center></p>
+        </div>
+
+        <script>
+            function handOver() {
+                const vehicleNumber = document.getElementById('vehicleNumber').value;
+                if (vehicleNumber) {
+                    document.getElementById('cameraOptions').innerHTML = `
+                        <h2>Hand Over</h2>
+                        
+                         <input type="file" accept="image/*" capture="camera" id="handOverImage">
+                        
+                        
+                        <br><br>
+                        <button onclick="saveImage('handOverImage', '${vehicleNumber}.jpg')";>Submit</button>
+                    `;
+                } else {
+                    alert('Please enter a vehicle number.');
+                }
+            }
+    
+            function fitted() {
+                const vehicleNumber = document.getElementById('vehicleNumber').value;
+                if (vehicleNumber) {
+                    document.getElementById('cameraOptions').innerHTML = `
+                        <h2>Fitted</h2>
+                        <input type="file" accept="image/*" capture="camera" id="fittedImage1">
+                        <br><br>
+                        <input type="file" accept="image/*" capture="camera" id="fittedImage2">
+                        <br><br>
+                        <button onclick="saveBothImages('${vehicleNumber}')">Submit</button>
+                    `;
+                } else {
+                    alert('Please enter a vehicle number.');
+                }
+            }
+    
+            function saveBothImages(vehicleNumber) {
+                saveImage('fittedImage1', `${vehicleNumber}F.jpg`);
+                saveImage('fittedImage2', `${vehicleNumber}R.jpg`);
+            }
+    
+            function saveImage(inputId, fileName) {
+                const fileInput = document.getElementById(inputId);
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const link = document.createElement('a');
+                        link.href = e.target.result;
+                        link.download = fileName;
+                        link.click();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Please capture an image.');
+                }
+            }
+        </script>
+    
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            }, Math.floor(Math.random() * 600) + 600); // Random delay between 5 to 10 seconds
+        });
+    </script>
+</body>
+</html>
